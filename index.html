@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFC400">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TuDomiYa">
+<title>TuDomiYa · App del domiciliario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --amarillo:#FFC400; --fondo:#FFF7ED; --borde:#FED7AA; --suave:#FFEDD5; --amarillo-suave:#FEF3C7;
+  --nuevo:#FB923C; --accion:#EA580C; --naranja:#C2410C;
+  --texto:#44403C; --texto-fuerte:#1C1917; --texto-suave:#57534E; --gris:#78716C; --gris-claro:#F5F5F4; --linea:#E7E5E4;
+  --verde:#15803D; --verde-suave:#DCFCE7; --verde-texto:#166534;
+  --azul:#2563EB; --azul-texto:#1D4ED8; --azul-suave:#DBEAFE; --azul-linea:#93C5FD;
+  --morado:#7E22CE; --morado-fuerte:#6B21A8; --morado-suave:#F3E8FF;
+  --rojo:#DC2626; --rojo-texto:#B91C1C; --rojo-suave:#FEE2E2;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:#E7E5E4;font-family:'Outfit',system-ui,-apple-system,sans-serif;color:var(--texto);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+button,input,textarea{font-family:inherit}
+.app{max-width:430px;margin:0 auto;background:var(--fondo);min-height:100vh;min-height:100dvh}
+.pantalla{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+.contenido{flex:1;padding:16px;display:flex;flex-direction:column;gap:12px}
+.grow{flex:1}
+.centro{text-align:center}
+
+/* Encabezados */
+.header{background:var(--amarillo);padding:calc(16px + env(safe-area-inset-top)) 20px 22px;border-radius:0 0 28px 28px;display:flex;flex-direction:column;gap:16px}
+.header-fila{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.marca-wrap{display:flex;align-items:center;gap:10px}
+.logo{width:42px;height:42px;border-radius:13px;background:var(--naranja);color:var(--amarillo);display:flex;align-items:center;justify-content:center;border:none;padding:0;flex-shrink:0;cursor:pointer}
+.marca{font-weight:800;font-size:26px;letter-spacing:-.5px;color:var(--naranja)}
+.icon-btn{width:48px;height:48px;border-radius:16px;border:none;background:var(--naranja);color:#fff;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;flex-shrink:0}
+.saludo-fila{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.saludo{font-size:32px;font-weight:800;letter-spacing:-.5px;line-height:1.1;color:var(--texto-fuerte)}
+.estado{font-size:17px;font-weight:600;color:var(--texto)}
+.switch{flex-shrink:0;width:72px;height:44px;border-radius:22px;border:none;padding:4px;display:flex;align-items:center;justify-content:flex-start;cursor:pointer;background:var(--texto-suave);transition:background .2s}
+.switch span{width:36px;height:36px;border-radius:50%;background:#fff;display:block}
+.switch.on{background:var(--verde);justify-content:flex-end}
+.h-titulo{margin:0;font-size:28px;font-weight:800;letter-spacing:-.5px;color:var(--texto-fuerte)}
+.pasos{display:flex;gap:6px}
+.pasos span{flex:1;height:8px;border-radius:4px;background:#fff}
+.pasos span.lleno{background:var(--naranja)}
+.sub-header{background:var(--amarillo);padding:calc(14px + env(safe-area-inset-top)) 16px 18px;border-radius:0 0 28px 28px;display:flex;align-items:center;gap:12px}
+.sub-header h1{margin:0;font-size:24px;font-weight:800;color:var(--texto-fuerte)}
+.back{width:48px;height:48px;border-radius:16px;background:#fff;color:var(--naranja);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.hero{background:var(--amarillo);padding:calc(44px + env(safe-area-inset-top)) 24px 30px;border-radius:0 0 36px 36px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.hero.rojo{background:var(--rojo-suave)}
+.hero h1{margin:0;font-size:30px;font-weight:800;letter-spacing:-.5px;color:var(--texto-fuerte)}
+.hero p{margin:0;font-size:16px}
+.logo-grande{width:88px;height:88px;border-radius:26px;background:var(--naranja);color:var(--amarillo);display:flex;align-items:center;justify-content:center}
+.circ-grande{width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+
+/* Secciones y tarjetas */
+.seccion{display:flex;align-items:center;justify-content:space-between;padding:4px 4px 0}
+.seccion h2{margin:0;font-size:22px;font-weight:700;color:var(--naranja)}
+.contador{min-width:32px;height:30px;border-radius:15px;background:var(--naranja);color:#fff;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;padding:0 10px}
+.card{background:#fff;border:1px solid var(--borde);border-radius:24px;overflow:hidden}
+.card-pad{padding:18px;display:flex;flex-direction:column;gap:14px}
+.strip{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:16px;color:var(--texto)}
+.strip.nuevo{background:var(--nuevo)}
+.strip.normal{background:var(--amarillo-suave)}
+.strip.bloq{background:var(--gris-claro);color:var(--texto-suave)}
+.strip .t{display:inline-flex;align-items:center;gap:6px;font-size:17px}
+.paradas{display:flex;flex-direction:column}
+.parada{display:flex;gap:14px;position:relative;padding-bottom:14px}
+.parada:last-child{padding-bottom:0}
+.parada .dot{width:14px;height:14px;border-radius:50%;margin-top:3px;flex-shrink:0;position:relative;z-index:1}
+.parada.recoger .dot{background:var(--azul)}
+.parada.entregar .dot{border:3px solid var(--accion);background:#fff}
+.parada.recoger::before{content:'';position:absolute;left:6px;top:21px;bottom:0;border-left:2px dashed var(--azul-linea)}
+.parada-txt{display:flex;flex-direction:column;gap:1px;min-width:0}
+.lbl{font-size:13px;font-weight:700}
+.lbl.azul{color:var(--azul-texto)} .lbl.naranja{color:var(--naranja)} .lbl.rojo{color:var(--rojo-texto)}
+.nombre{font-size:18px;font-weight:700;color:var(--texto-fuerte)}
+.grande-nombre{font-size:22px;font-weight:800;color:var(--texto-fuerte)}
+.dir{font-size:15px;color:var(--texto-suave)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:700;padding:7px 12px;border-radius:12px}
+.chip.azul{background:var(--azul-suave);color:var(--azul-texto)}
+.chip.morado{background:var(--morado-suave);color:var(--morado)}
+.chip.gris{background:var(--gris-claro);color:var(--texto-suave)}
+.chip.amarillo{background:var(--amarillo);color:var(--texto-fuerte)}
+.accion-fila{display:flex;gap:10px;align-items:stretch}
+.precio{height:60px;padding:6px 16px;border-radius:18px;background:var(--amarillo);display:flex;flex-direction:column;justify-content:center;flex-shrink:0}
+.precio small{font-size:12px;font-weight:700;color:var(--texto)}
+.precio b{font-size:26px;font-weight:800;letter-spacing:-.5px;line-height:1.05;color:var(--texto-fuerte)}
+.fila-ico{display:flex;gap:14px;align-items:flex-start}
+.ico-circ{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ico-circ.azul{background:var(--azul-suave);color:var(--azul-texto)}
+.ico-circ.naranja{background:var(--suave);color:var(--naranja)}
+.ico-circ.morado{background:var(--morado-suave);color:var(--morado)}
+.ico-circ.amarillo{background:var(--amarillo-suave);color:var(--naranja)}
+.nota-cliente{background:var(--fondo);border-radius:14px;padding:10px 12px;display:flex;gap:8px;align-items:center;font-size:15px}
+.nota-cliente svg{flex-shrink:0}
+.tiempos-mini{display:flex;gap:16px;justify-content:center;align-items:center;font-size:14px;color:var(--texto-suave);flex-wrap:wrap}
+.tiempos-mini span{display:inline-flex;align-items:center;gap:6px}
+.morado-box{background:var(--morado-suave);border-radius:24px;padding:16px 18px;display:flex;align-items:center;gap:14px}
+.morado-box .circ{width:48px;height:48px;border-radius:50%;background:#fff;color:var(--morado);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.morado-box small{font-size:14px;color:var(--morado);font-weight:700;display:block}
+.morado-box b{font-size:32px;font-weight:800;letter-spacing:-.5px;line-height:1.1;color:var(--morado-fuerte);display:block}
+.morado-box span.s{font-size:14px;color:var(--morado)}
+.morado-fila{background:var(--morado-suave);border-radius:18px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.morado-fila span{font-size:15px;font-weight:700;color:var(--morado)}
+.morado-fila b{font-size:26px;font-weight:800;color:var(--morado-fuerte)}
+.activo-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:22px;background:#fff;border:2px solid var(--accion);text-align:left;width:100%;cursor:pointer;color:var(--texto)}
+
+/* Botones */
+.btn{height:60px;border-radius:18px;border:none;background:var(--accion);color:#fff;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;cursor:pointer;width:100%;flex-shrink:0}
+.accion-fila .btn{width:auto;flex:1}
+.btn.grande{height:64px}
+.btn.sec{background:#fff;border:2px solid var(--borde);color:var(--naranja);font-size:17px;height:56px}
+.btn.rojo{background:var(--rojo)}
+.btn.salir{background:#fff;border:2px solid #FECACA;color:var(--rojo);font-size:18px;height:56px}
+.btn-texto{height:48px;border:none;background:none;color:var(--naranja);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;text-decoration:none;width:100%;flex-shrink:0}
+.btn-texto.rojo{color:var(--rojo)}
+.bloqueado{height:56px;border-radius:18px;background:var(--gris-claro);color:var(--texto-suave);display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:700}
+.btn:active,.btn-texto:active,.opcion:active,.fila:active,.menu-fila:active,.activo-card:active{transform:scale(.98)}
+.duo{display:flex;gap:10px}
+.duo > *{flex:1}
+.mini{height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:700;text-decoration:none;border:none;cursor:pointer}
+.mini.azul{background:var(--azul-suave);color:var(--azul-texto)}
+.mini.naranja{background:var(--suave);color:var(--naranja)}
+
+/* Menú inferior */
+.nav-wrap{position:sticky;bottom:0;padding:10px 16px calc(14px + env(safe-area-inset-bottom));background:var(--fondo);z-index:5}
+.nav{padding:6px;background:var(--naranja);border-radius:24px;display:flex;gap:4px}
+.nav button{flex:1;height:56px;border:none;border-radius:18px;background:none;color:var(--suave);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;font-weight:700;cursor:pointer;position:relative}
+.nav button.activo{background:var(--amarillo);color:var(--texto)}
+.nav .punto{position:absolute;top:7px;left:calc(50% + 7px);width:11px;height:11px;border-radius:50%;background:var(--amarillo);border:2px solid var(--naranja)}
+.nav .punto.blanco{background:#fff}
+
+/* Avisos y estados */
+.aviso{border-radius:18px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;font-size:15px}
+.aviso svg{flex-shrink:0}
+.aviso b{display:block;font-size:16px}
+.aviso p{margin:2px 0 0;font-size:14px;color:var(--texto-suave)}
+.aviso.naranja{background:var(--suave);border:1px solid var(--borde);color:var(--naranja)}
+.aviso.amarillo{background:var(--amarillo-suave);color:var(--texto)}
+.aviso.rojo{background:var(--rojo-suave);color:var(--rojo-texto)}
+.aviso.rojo p{color:var(--rojo-texto)}
+.vacio{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px 12px;text-align:center}
+.vacio .circulo{width:108px;height:108px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.vacio h2{margin:0;font-size:24px;font-weight:800;color:var(--texto-fuerte)}
+.vacio p{margin:0;font-size:16px;color:var(--texto-suave);max-width:300px}
+.vacio .btn,.vacio .monto-card{align-self:stretch}
+.circ-amarillo{background:var(--amarillo-suave);color:var(--naranja)}
+.circ-rojo{background:var(--rojo-suave);color:var(--rojo)}
+.circ-gris{background:var(--gris-claro);color:var(--texto-suave)}
+.monto-card{background:#fff;border:1px solid var(--borde);border-radius:18px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;text-align:left}
+.monto-card small{display:block;font-size:14px;color:var(--texto-suave)}
+.monto-card b{font-size:22px;font-weight:800;color:var(--texto-fuerte)}
+.desc-roja{font-size:14px;font-weight:700;color:var(--rojo)}
+.pill-verde{align-self:center;display:inline-flex;align-items:center;gap:8px;background:var(--verde-suave);color:var(--verde-texto);font-size:15px;font-weight:700;padding:8px 14px;border-radius:999px}
+.pill-verde i{width:10px;height:10px;border-radius:50%;background:var(--verde);display:block}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.badge.gris{background:var(--gris-claro);color:var(--texto-suave)}
+.badge.rojo{background:var(--rojo-suave);color:var(--rojo-texto)}
+.badge.amarillo{background:var(--amarillo-suave);color:var(--texto)}
+.badge.verde{background:var(--verde-suave);color:var(--verde-texto)}
+.dot-azul{width:12px;height:12px;border-radius:50%;background:var(--azul);flex-shrink:0}
+.dot-naranja{width:12px;height:12px;border-radius:50%;border:3px solid var(--accion);flex-shrink:0}
+
+/* Formularios */
+.opciones{display:flex;flex-direction:column;gap:8px}
+.opcion{min-height:54px;border-radius:16px;border:1.5px solid var(--linea);background:#fff;display:flex;align-items:center;gap:12px;padding:10px 16px;text-align:left;color:var(--texto-fuerte);font-size:16px;font-weight:600;cursor:pointer;width:100%}
+.opcion .radio{width:22px;height:22px;border-radius:50%;border:2px solid #D6D3D1;flex-shrink:0;background:#fff}
+.opcion.sel{border:2px solid var(--accion);background:var(--fondo);font-weight:700}
+.opcion.sel .radio{border:6px solid var(--accion)}
+.campo{display:flex;flex-direction:column;gap:8px}
+.campo label,.lbl-campo{font-size:15px;font-weight:700;color:var(--texto)}
+.pregunta{font-size:18px;font-weight:700;color:var(--texto-fuerte)}
+.input{height:58px;border:1.5px solid var(--borde);border-radius:16px;background:#fff;padding:0 16px;font-size:18px;color:var(--texto-fuerte);outline:none;width:100%}
+.input:focus,.tel:focus-within{border-color:var(--accion);box-shadow:0 0 0 3px rgba(234,88,12,.15)}
+textarea.input{height:88px;padding:12px 14px;font-size:16px;resize:none}
+.tel{display:flex;align-items:center;height:58px;border:1.5px solid var(--borde);border-radius:16px;background:#fff;overflow:hidden}
+.tel span{padding:0 14px;height:100%;display:flex;align-items:center;background:var(--suave);color:var(--naranja);font-weight:700;font-size:17px}
+.tel input{flex:1;min-width:0;height:100%;border:none;outline:none;padding:0 14px;font-size:18px;color:var(--texto-fuerte);background:transparent}
+.error{color:var(--rojo-texto);font-size:14px;font-weight:600;margin:0}
+.nota-p{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--texto-suave)}
+.nota-p svg{flex-shrink:0}
+.subir{position:relative;min-height:140px;border-radius:20px;border:2px dashed var(--nuevo);background:#fff;color:var(--naranja);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;padding:12px;text-align:center}
+.subir img{max-height:170px;max-width:100%;border-radius:12px}
+.subir input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.cred{background:var(--amarillo-suave);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.cred > b{font-size:15px;color:var(--texto-fuerte)}
+.cred button{min-height:56px;border-radius:14px;border:1.5px solid var(--borde);background:#fff;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:8px 14px;cursor:pointer;text-align:left}
+.cred button span{font-size:15px;font-weight:700;color:var(--texto-fuerte)}
+.cred button small{font-size:13px;color:var(--texto-suave)}
+
+/* Historial y detalle */
+.filtros{display:flex;gap:8px;flex-wrap:wrap}
+.filtros button{height:40px;border-radius:20px;border:none;background:#fff;color:var(--naranja);padding:0 18px;font-size:15px;font-weight:700;cursor:pointer}
+.filtros button.sel{background:var(--naranja);color:#fff}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tile{background:#fff;border:1px solid var(--borde);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.tile span{font-size:13px;color:var(--texto-suave);font-weight:600}
+.tile b{font-size:20px;font-weight:800;color:var(--texto-fuerte);white-space:nowrap}
+.etq-dia{font-size:15px;font-weight:700;color:var(--texto-suave);padding:6px 4px 0}
+.etq-dia::first-letter{text-transform:uppercase}
+.lista{background:#fff;border:1px solid var(--borde);border-radius:22px;overflow:hidden}
+.fila{display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;border-bottom:1px solid var(--suave);background:none;width:100%;text-align:left;color:var(--texto);cursor:pointer}
+.fila:last-child{border-bottom:none}
+.fila .hora{width:54px;display:flex;flex-direction:column;flex-shrink:0}
+.fila .hora b{font-size:16px;color:var(--texto-fuerte)}
+.fila .hora small{font-size:12px;color:var(--texto-suave)}
+.fila .medio{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+.fila .medio b{font-size:16px;color:var(--texto-fuerte);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.fila .monto{font-size:16px;font-weight:800;color:var(--naranja)}
+.chev{color:#A8A29E;display:flex;flex-shrink:0}
+.linea-t{display:flex;align-items:center;gap:12px;font-size:16px}
+.linea-t .dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.linea-t .n{flex:1;font-weight:600}
+.linea-t small{width:64px;text-align:right;font-size:13px;color:var(--texto-suave)}
+.sep{height:1px;background:var(--suave)}
+.kv{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:16px}
+.kv b{font-weight:800;color:var(--texto-fuerte)}
+.titulo-card{font-size:16px;font-weight:800;color:var(--texto-fuerte)}
+.monto-grande{font-size:40px;font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--texto-fuerte)}
+.lbl-fecha{display:inline-flex;align-items:center;gap:6px;font-size:16px;font-weight:700;color:var(--naranja)}
+.lbl-fecha.rojo{color:var(--rojo)}
+
+/* Perfil y herramientas de prueba */
+.perfil-top{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding-top:6px}
+.avatar{width:88px;height:88px;border-radius:50%;background:var(--amarillo);color:var(--naranja);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800}
+.menu-fila{height:60px;padding:0 18px;display:flex;align-items:center;gap:14px;border:none;border-bottom:1px solid var(--suave);background:none;width:100%;font-size:17px;font-weight:600;color:var(--texto-fuerte);cursor:pointer;text-align:left}
+.menu-fila:last-child{border-bottom:none}
+.menu-fila .ico{color:var(--naranja);display:flex}
+.menu-fila .txt{flex:1}
+.demo{border:2px dashed var(--borde);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.demo h3{margin:0;font-size:16px;font-weight:800;color:var(--texto-fuerte);display:flex;align-items:center;gap:8px}
+.demo p{margin:0;font-size:14px;color:var(--texto-suave)}
+.demo button{min-height:50px;border-radius:14px;border:1.5px solid var(--borde);background:#fff;color:var(--naranja);font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px;padding:0 14px;cursor:pointer;text-align:left}
+.demo-mini{border:2px dashed var(--borde);border-radius:16px;padding:6px 8px}
+
+/* Hoja inferior y aviso flotante */
+.sheet-fondo{position:fixed;inset:0;background:rgba(28,25,23,.55);display:flex;align-items:flex-end;justify-content:center;z-index:20;animation:fade .2s}
+.sheet{background:#fff;width:100%;max-width:430px;border-radius:28px 28px 0 0;padding:12px 20px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;animation:subir .25s ease-out}
+.sheet h2{margin:0;font-size:24px;font-weight:800;color:var(--texto-fuerte)}
+.sheet p.sub{margin:4px 0 0;font-size:15px;color:var(--texto-suave)}
+.agarre{width:44px;height:5px;border-radius:3px;background:var(--linea);align-self:center}
+.opcion.grande-op{min-height:72px}
+.op-txt{flex:1;display:flex;flex-direction:column}
+.op-txt b{font-size:18px}
+.op-txt small{font-size:14px;color:var(--texto-suave);font-weight:400}
+@keyframes subir{from{transform:translateY(40px);opacity:0}}
+@keyframes fade{from{opacity:0}}
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translateX(-50%) translateY(-16px);background:#44403C;color:#fff;padding:12px 18px;border-radius:14px;font-size:15px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;width:max-content;max-width:calc(100% - 40px);text-align:center;z-index:30}
+.toast.ver{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div id="app" class="app"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<noscript>Activa JavaScript para usar el prototipo de TuDomiYa.</noscript>
+<script>
+'use strict';
+
+/* =========================================================
+   TuDomiYa · Prototipo de la app del domiciliario
+   Datos por ajustar después de la entrevista:
+   ========================================================= */
+const VALOR_CUOTA = '$XX.000';          // Valor de la cuota semanal
+const NEQUI_CENTRAL = '3XX XXX XXXX';   // Número de Nequi de la central
+
+/* Usuarios de prueba (quemados) */
+const USUARIOS = {
+  '3001234567': { id: 'carlos', clave: '1234', nombre: 'Carlos Ramírez', corto: 'Carlos', iniciales: 'CR', placa: 'ABC 12D', moto: 'Honda CB 125', cuota: 'al_dia' },
+  '3009876543': { id: 'luis', clave: '1234', nombre: 'Luis Pérez', corto: 'Luis', iniciales: 'LP', placa: 'XYZ 98E', moto: 'Yamaha XTZ 125', cuota: 'vencida' }
+};
+
+const NOVEDADES = ['El cliente no contesta', 'La dirección está errada', 'El cliente rechazó el pedido', 'El negocio no lo tiene listo', 'Problema con la moto', 'Otro motivo'];
+const MOTIVOS_CANCELAR = ['Se me varó la moto', 'Tuve una emergencia', 'El negocio está muy lejos', 'Otro motivo'];
+const PEDIDOS_EXTRA = [
+  { negocio: 'Pizzería Roma', dirNegocio: 'Av. 4 #9-12, Centro', barrio: 'Barrio San Luis', cliente: 'Camilo T.', dirCliente: 'Cl. 25 #6-30, San Luis', nota: 'Portón negro', km: '3,0', cobrar: 52000, domicilio: 7000 },
+  { negocio: 'Droguería La Sexta', dirNegocio: 'Av. 6 #11-40, Centro', barrio: 'Barrio Quinta Oriental', cliente: 'Laura M.', dirCliente: 'Cl. 9 #14-18, Quinta Oriental', nota: 'Dejar en portería', km: '1,8', cobrar: 0, domicilio: 5000 },
+  { negocio: 'Asadero El Rancho', dirNegocio: 'Cl. 11 #2-60, Centro', barrio: 'Barrio Lleras', cliente: 'Pedro S.', dirCliente: 'Av. 2 #20-11, Lleras', nota: 'Casa de dos pisos', km: '2,7', cobrar: 41000, domicilio: 6000 }
+];
+
+/* ---------- Utilidades ---------- */
+const LS_KEY = 'tudomiya-demo-v1';
+const ahora = () => Date.now();
+const min = n => n * 60000;
+const fmt = n => '$' + Number(n || 0).toLocaleString('es-CO');
+const hora = t => new Date(t).toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' });
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const telFmt = t => String(t).replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3');
+const soloDigitos = s => String(s || '').replace(/\D/g, '');
+function hace(t) { const m = Math.max(1, Math.round((ahora() - t) / 60000)); return m < 60 ? `Hace ${m} min` : `Hace ${Math.floor(m / 60)} h`; }
+function horaPartes(t) { const s = hora(t); const m = s.match(/^([\d:]+)\s*(.*)$/); return m ? [m[1], m[2]] : [s, '']; }
+function mismoDia(a, b) { return new Date(a).toDateString() === new Date(b).toDateString(); }
+const esHoy = t => mismoDia(t, ahora());
+const esAyer = t => mismoDia(t, ahora() - 864e5);
+const fechaLarga = d => d.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '');
+const fechaCorta = d => d.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'short' }).replace(',', '').replace('.', '');
+function lunes(offset) { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7) + offset * 7); return d; }
+function rangoSemana(offset) {
+  const a = lunes(offset), b = new Date(a); b.setDate(a.getDate() + 6);
+  const f = x => x.getDate() + ' ' + x.toLocaleDateString('es-CO', { month: 'short' }).replace('.', '');
+  return `${f(a)} – ${f(b)}`;
+}
+const maps = dir => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(dir + ', Cúcuta');
+
+/* ---------- Íconos ---------- */
+const P = {
+  moto: '<circle cx="5.5" cy="16.5" r="3.5"/><circle cx="18.5" cy="16.5" r="3.5"/><path d="M5.5 16.5 9 10h5l4.5 6.5"/><path d="M14 10l-1.5-4H16"/><path d="M9 10H6.5"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  history: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/>',
+  wallet: '<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M16 15h2"/>',
+  nav: '<path d="M3 11 21 3l-8 18-2-8-8-2z"/>',
+  cash: '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  zap: '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>',
+  store: '<path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M9 20v-6h6v6"/>',
+  home: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  mobile: '<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+  back: '<path d="m15 18-6-6 6-6"/>',
+  chev: '<path d="m9 18 6-6-6-6"/>',
+  image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  msg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  cal: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  note: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+  tool: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9l-3.8 3.8z"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  refresh: '<path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/>'
+};
+const ic = (n, s = 22, w = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+
+/* ---------- Datos iniciales ---------- */
+function pedidosIniciales() {
+  const t = ahora();
+  return [
+    { id: 1043, negocio: 'Restaurante La Esquina', dirNegocio: 'Cl. 10 #4-25, Centro', barrio: 'Barrio Caobos', cliente: 'María G.', dirCliente: 'Av. 0 #12-40, Caobos', nota: 'Casa esquinera, reja blanca', km: '2,3', cobrar: 38000, domicilio: 6000, publicado: t - min(1) },
+    { id: 1044, negocio: 'Farmacia Central', dirNegocio: 'Av. 5 #8-30, Centro', barrio: 'Barrio La Riviera', cliente: 'Jorge P.', dirCliente: 'Cl. 18 #3-15, La Riviera', nota: 'Apartamento 302', km: '4,1', cobrar: 0, domicilio: 7000, publicado: t - min(3), loTomaOtro: true },
+    { id: 1045, negocio: 'Panadería El Trigal', dirNegocio: 'Cl. 13 #6-50, Centro', barrio: 'Barrio Prados del Este', cliente: 'Ana R.', dirCliente: 'Av. 7E #11-22, Prados del Este', nota: 'Timbre dañado, llamar al llegar', km: '3,5', cobrar: 24500, domicilio: 6500, publicado: t - min(6) }
+  ];
+}
+function historialInicial() {
+  const t = ahora(), D = 24 * 60;
+  const e = (id, negocio, barrio, haceMin, dom, cob, pago, estado, motivo, por) => {
+    const pub = t - min(haceMin);
+    return estado === 'cancelado'
+      ? { id, negocio, barrio, domicilio: dom, cobrado: cob, pago, estado, motivo, por, tiempos: { publicado: pub, tomado: pub + min(1), cancelado: pub + min(9) } }
+      : { id, negocio, barrio, domicilio: dom, cobrado: cob, pago, estado: 'entregado', tiempos: { publicado: pub, tomado: pub + min(2), recogido: pub + min(14), entregado: pub + min(27) } };
+  };
+  return [
+    e(1040, 'La Esquina', 'Caobos', 45, 6000, 38000, 'efectivo'),
+    e(1037, 'Farmacia Central', 'La Riviera', 90, 7000, 0, 'pagado'),
+    e(1033, 'Pizzería Roma', 'Prados del Este', 130, 0, 0, '', 'cancelado', 'El cliente canceló el pedido', 'central'),
+    e(1030, 'El Trigal', 'Centro', 170, 5000, 15000, 'transferencia'),
+    e(1012, 'La Esquina', 'San Luis', D + 120, 6000, 27000, 'efectivo'),
+    e(1008, 'Asadero El Rancho', 'Lleras', D + 200, 6000, 41000, 'efectivo')
+  ];
+}
+function cuentaNueva(u) { return { cuota: u.cuota, historial: u.id === 'luis' ? historialInicial().slice(4) : historialInicial(), pedidos: pedidosIniciales(), activo: null, disponible: true, permisos: false }; }
+function estadoInicial() {
+  const cuentas = {};
+  Object.values(USUARIOS).forEach(u => { cuentas[u.id] = cuentaNueva(u); });
+  return { v: 2, tel: null, pantalla: 'login', params: {}, cuentas, nextId: 1046, extra: 0, aviso: null, sheet: null, sel: {}, cancelado: null, filtro: 'hoy', foto: null };
+}
+
+/* ---------- Estado ---------- */
+function cargar() {
+  try { const s = JSON.parse(localStorage.getItem(LS_KEY)); if (s && s.v === 2 && s.cuentas) return s; } catch (e) {}
+  return null;
+}
+function guardar() { try { localStorage.setItem(LS_KEY, JSON.stringify(Object.assign({}, S, { foto: null, sheet: null }))); } catch (e) {} }
+let S = cargar() || estadoInicial();
+const U = () => USUARIOS[S.tel];
+const C = () => S.cuentas[U().id];
+const libreParaPedidos = () => C().cuota === 'al_dia';
+
+/* ---------- Aviso flotante ---------- */
+let toastTimer;
+function toast(txt) {
+  const el = document.getElementById('toast');
+  el.textContent = txt; el.classList.add('ver');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('ver'), 2600);
+}
+
+/* ---------- Navegación ---------- */
+function ir(p, params = {}, push = true) {
+  S.pantalla = p; S.params = params; S.sheet = null; S.sel = {}; S.aviso = null;
+  if (push) history.pushState({ p, params }, '');
+  render(); window.scrollTo(0, 0);
+}
+window.addEventListener('popstate', e => {
+  S.sheet = null;
+  if (!S.tel) { S.pantalla = 'login'; render(); return; }
+  const st = e.state || {};
+  S.pantalla = st.p && st.p !== 'login' ? st.p : 'pedidos';
+  S.params = st.params || {}; S.sel = {};
+  render(); window.scrollTo(0, 0);
+});
+
+/* ---------- Piezas comunes ---------- */
+const marca = () => `<div class="marca-wrap"><button class="logo" data-accion="ir" data-a="perfil" aria-label="Mi perfil">${ic('moto', 27, 2.2)}</button><span class="marca">TuDomiYa</span></div>`;
+const campana = () => `<button class="icon-btn" data-accion="campana" aria-label="Notificaciones">${ic('bell')}</button>`;
+function headerCompleto(estado) {
+  const on = C().disponible && libreParaPedidos();
+  return `<header class="header">
+    <div class="header-fila">${marca()}${campana()}</div>
+    <div class="saludo-fila"><div><div class="saludo">Hola, ${esc(U().corto)}</div><div class="estado">${estado}</div></div>
+    <button class="switch ${on ? 'on' : ''}" data-accion="switch" aria-label="Disponible" aria-pressed="${on}"><span></span></button></div>
+  </header>`;
+}
+function headerTab(titulo, extra = '') {
+  return `<header class="header" style="gap:14px;padding-bottom:20px"><div class="header-fila">${marca()}${campana()}</div><h1 class="h-titulo">${titulo}</h1>${extra}</header>`;
+}
+function subHeader(titulo, atras) {
+  return `<header class="sub-header"><button class="back" data-accion="ir" data-a="${atras}" aria-label="Volver">${ic('back', 24, 2.5)}</button><h1>${titulo}</h1></header>`;
+}
+function nav(activa) {
+  const c = C();
+  const tabs = [['pedidos', 'list', 'Pedidos'], ['activo', 'moto', 'Activo'], ['historial', 'history', 'Historial'], ['cuota', 'wallet', 'Cuota']];
+  return `<div class="nav-wrap"><nav class="nav">${tabs.map(([k, i, l]) => {
+    const act = k === activa;
+    let punto = '';
+    if (!act && k === 'activo' && c.activo) punto = '<i class="punto"></i>';
+    if (!act && k === 'cuota' && c.cuota === 'vencida') punto = '<i class="punto blanco"></i>';
+    return `<button class="${act ? 'activo' : ''}" data-accion="ir" data-a="${k}" ${act ? 'aria-current="page"' : ''}>${ic(i)}<span>${l}</span>${punto}</button>`;
+  }).join('')}</nav></div>`;
+}
+function vacio(color, icono, titulo, texto, extra = '') {
+  return `<div class="vacio"><div class="circulo circ-${color}">${ic(icono, 52, 1.8)}</div><h2>${titulo}</h2><p>${texto}</p>${extra}</div>`;
+}
+function paradas(n1, d1, n2, d2, extra = '') {
+  return `<div class="paradas">
+    <div class="parada recoger"><span class="dot"></span><div class="parada-txt"><span class="lbl azul">Recoger</span><span class="nombre">${esc(n1)}</span>${d1 ? `<span class="dir">${esc(d1)}</span>` : ''}</div></div>
+    <div class="parada entregar"><span class="dot"></span><div class="parada-txt"><span class="lbl naranja">Entregar</span><span class="nombre">${esc(n2)}</span>${d2 ? `<span class="dir">${esc(d2)}</span>` : ''}${extra}</div></div>
+  </div>`;
+}
+const chipKm = p => `<span class="chip azul">${ic('nav', 16)} ${p.km} km</span>`;
+const chipCobro = p => p.cobrar > 0 ? `<span class="chip morado">${ic('cash', 16)} Cobrar ${fmt(p.cobrar)}</span>` : `<span class="chip gris">${ic('check', 16, 2.5)} Ya pagado</span>`;
+function opcion(grupo, valor, etiqueta, sel) {
+  return `<button class="opcion ${sel ? 'sel' : ''}" data-accion="sel" data-g="${grupo}" data-v="${esc(valor)}" aria-pressed="${sel}"><span class="radio"></span>${esc(etiqueta)}</button>`;
+}
+const pedidosOrdenados = () => [...C().pedidos].sort((a, b) => b.publicado - a.publicado);
+
+/* ---------- Pantallas ---------- */
+const PANTALLAS = {};
+
+PANTALLAS.login = () => `<div class="pantalla">
+  <header class="hero" style="padding-top:calc(52px + env(safe-area-inset-top));padding-bottom:36px">
+    <div class="logo-grande">${ic('moto', 52)}</div>
+    <span style="font-weight:800;font-size:38px;letter-spacing:-1px;color:var(--naranja)">TuDomiYa</span>
+    <span style="font-size:17px;font-weight:600">La app de los domiciliarios</span>
+  </header>
+  <main class="contenido" style="padding:28px 24px 24px;gap:16px">
+    <h1 style="margin:0;font-size:26px;font-weight:800;color:var(--texto-fuerte)">Ingresa a tu cuenta</h1>
+    <form id="form-login" style="display:flex;flex-direction:column;gap:16px" novalidate>
+      <div class="campo"><label for="tel">Número de celular</label><div class="tel"><span>+57</span><input id="tel" type="tel" inputmode="numeric" autocomplete="tel" placeholder="300 123 4567"></div></div>
+      <div class="campo"><label for="clave">Clave</label><input class="input" id="clave" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Tu clave"></div>
+      <p class="error" id="err-login" hidden>Número o clave incorrectos.</p>
+      <button class="btn" type="submit">Ingresar</button>
+    </form>
+    <div class="cred"><b>Usuarios de prueba · clave 1234</b>
+      <button data-accion="llenar" data-tel="3001234567"><span>Carlos · 300 123 4567</span><small>Activo · cuota al día</small></button>
+      <button data-accion="llenar" data-tel="3009876543"><span>Luis · 300 987 6543</span><small>Inactivo · cuota vencida</small></button>
+    </div>
+    <p class="centro" style="margin:0;font-size:13px;color:var(--texto-suave)">Al ingresar aceptas la política de tratamiento de datos.</p>
+  </main></div>`;
+
+PANTALLAS.permisos = () => `<div class="pantalla">
+  <header class="header" style="padding-bottom:22px"><div class="header-fila"><div class="marca-wrap"><div class="logo" aria-hidden="true">${ic('moto', 27, 2.2)}</div><span class="marca">TuDomiYa</span></div></div></header>
+  <main class="contenido" style="padding:28px 20px 24px;gap:16px">
+    <h1 class="h-titulo">Antes de empezar</h1>
+    <p style="margin:0;font-size:16px;color:var(--texto-suave)">Activa estos permisos para que la app funcione bien en la calle.</p>
+    <div class="card"><div class="card-pad" style="flex-direction:row;align-items:flex-start"><span class="ico-circ naranja">${ic('bell', 26)}</span><div class="parada-txt" style="gap:4px"><span class="nombre">Notificaciones</span><span class="dir">Te avisamos al instante cuando llegue un pedido.</span></div></div></div>
+    <div class="card"><div class="card-pad" style="flex-direction:row;align-items:flex-start"><span class="ico-circ azul">${ic('pin', 26)}</span><div class="parada-txt" style="gap:4px"><span class="nombre">Ubicación</span><span class="dir">Para mostrarte la distancia a cada pedido.</span></div></div></div>
+    <div class="aviso amarillo">${ic('info')}<span>En iPhone, primero agrega TuDomiYa a tu pantalla de inicio para recibir los avisos.</span></div>
+    <div class="grow"></div>
+    <button class="btn" data-accion="permisos">Activar permisos</button>
+    <button class="btn-texto" data-accion="permisos">Ahora no</button>
+  </main></div>`;
+
+PANTALLAS.pedidos = () => {
+  const c = C();
+  if (!libreParaPedidos()) return pantallaBloqueo();
+  if (c.activo) return pantallaOcupado();
+  if (!c.disponible) {
+    return `<div class="pantalla">${headerCompleto('Desconectado · no recibes pedidos')}<main class="contenido">
+      ${vacio('gris', 'moto', 'Estás desconectado', 'Activa el botón de arriba para empezar a recibir pedidos.', `<button class="btn" data-accion="switch">Conectarme</button>`)}
+    </main>${nav('pedidos')}</div>`;
+  }
+  const lista = pedidosOrdenados();
+  const aviso = S.aviso ? `<div class="aviso naranja">${ic('info')}<div><b>Otro domiciliario lo tomó primero</b><p>El pedido de ${esc(S.aviso)} ya no está disponible.</p></div></div>` : '';
+  const cuerpo = lista.length
+    ? lista.map((p, i) => tarjetaPedido(p, i === 0)).join('')
+    : vacio('amarillo', 'moto', 'No hay pedidos por ahora', 'Te avisaremos apenas llegue uno. Deja la app abierta o las notificaciones activas.');
+  return `<div class="pantalla">${headerCompleto('Estás libre · puedes tomar pedidos')}<main class="contenido">
+    ${aviso}<div class="seccion"><h2>Pedidos disponibles</h2><span class="contador">${lista.length}</span></div>${cuerpo}
+  </main>${nav('pedidos')}</div>`;
+};
+function tarjetaPedido(p, nuevo) {
+  const strip = nuevo
+    ? `<div class="strip nuevo"><span class="t">${ic('zap', 18, 2.5)} Nuevo pedido</span><span>${hace(p.publicado)}</span></div>`
+    : `<div class="strip normal"><span class="t">Sin tomar</span><span style="color:var(--texto-suave);font-weight:600">${hace(p.publicado)}</span></div>`;
+  return `<article class="card">${strip}<div class="card-pad">
+    ${paradas(p.negocio, p.dirNegocio, p.barrio, 'Dirección completa al tomar el pedido')}
+    <div class="chips">${chipKm(p)}${chipCobro(p)}</div>
+    <div class="accion-fila"><div class="precio"><small>Domicilio</small><b>${fmt(p.domicilio)}</b></div>
+    <button class="btn" data-accion="tomar" data-id="${p.id}">Tomar pedido</button></div>
+  </div></article>`;
+}
+function pantallaOcupado() {
+  const a = C().activo, p = a.pedido;
+  const lista = pedidosOrdenados();
+  return `<div class="pantalla">${headerCompleto('Tienes un pedido en curso')}<main class="contenido">
+    <button class="activo-card" data-accion="ir" data-a="activo">
+      <span class="ico-circ naranja">${ic('moto', 26)}</span>
+      <span class="parada-txt" style="flex:1"><span class="lbl naranja">Pedido activo · ${a.paso === 1 ? 'Ir a recoger' : 'En camino'}</span><span class="nombre">${esc(a.paso === 1 ? p.negocio : p.cliente)}</span><span class="dir">${a.paso === 1 ? 'Entregar en ' + esc(p.barrio) : esc(p.dirCliente)}</span></span>
+      <span style="color:var(--naranja);display:flex">${ic('chev', 22, 2.5)}</span>
+    </button>
+    <div class="seccion"><h2>Pedidos disponibles</h2><span class="contador">${lista.length}</span></div>
+    <p class="dir" style="margin:-6px 4px 0">Termina tu pedido activo para tomar otro.</p>
+    ${lista.map(q => `<article class="card" style="border-color:var(--linea)"><div class="strip bloq"><span class="t">Sin tomar</span><span style="font-weight:600">${hace(q.publicado)}</span></div><div class="card-pad">
+      <div class="parada-txt"><span class="lbl" style="color:var(--gris)">Recoger</span><span class="nombre" style="color:var(--texto-suave)">${esc(q.negocio)}</span><span class="dir" style="color:var(--gris)">${esc(q.dirNegocio)}</span></div>
+      <div class="bloqueado">${ic('lock', 18)} Disponible al terminar tu pedido</div></div></article>`).join('')}
+  </main>${nav('pedidos')}</div>`;
+}
+function pantallaBloqueo() {
+  const rev = C().cuota === 'revision';
+  const cuerpo = rev
+    ? vacio('amarillo', 'clock', 'Tu pago está en revisión', 'El administrador está revisando tu comprobante. Podrás tomar pedidos apenas lo apruebe.', `<button class="btn sec" data-accion="ir" data-a="cuota">Ver mi cuota</button>`)
+    : `<div class="vacio"><div class="circulo circ-rojo">${ic('lock', 50)}</div><h2>Tienes la cuota pendiente</h2><p>Para volver a tomar pedidos, paga la cuota y avisa a la central.</p>
+        <div class="monto-card"><span><small>Valor</small><b>${VALOR_CUOTA}</b></span><span class="desc-roja">Venció el ${fechaCorta(lunes(0))}</span></div>
+        <button class="btn" data-accion="ir" data-a="cuota">Ver cómo pagar</button>
+        <button class="btn sec" data-accion="ir" data-a="pago">Ya pagué, subir comprobante</button></div>`;
+  return `<div class="pantalla">${headerCompleto(rev ? 'Pago en revisión · sin pedidos' : 'Cuota pendiente · sin pedidos')}<main class="contenido">${cuerpo}</main>${nav('pedidos')}</div>`;
+}
+
+PANTALLAS.tomado = () => {
+  const a = C().activo; if (!a) return PANTALLAS.pedidos();
+  const p = a.pedido;
+  return `<div class="pantalla">
+    <header class="hero"><div class="circ-grande" style="background:var(--accion)">${ic('check', 44, 3)}</div><h1>El pedido es tuyo</h1><p>Ahora ve a recogerlo. Ya puedes ver la dirección completa.</p></header>
+    <main class="contenido" style="padding-top:20px">
+      <article class="card"><div class="card-pad">
+        ${paradas(p.negocio, p.dirNegocio, p.cliente, p.dirCliente, p.nota ? `<span class="dir" style="font-size:14px">${esc(p.nota)}</span>` : '')}
+        <div class="chips">${chipKm(p)}${chipCobro(p)}<span class="chip amarillo">Domicilio ${fmt(p.domicilio)}</span></div>
+      </div></article>
+      <div class="tiempos-mini"><span>${ic('clock', 16)} Tomado a las ${hora(a.tomado)}</span></div>
+      <div class="grow"></div>
+      <button class="btn grande" data-accion="ir" data-a="activo">${ic('nav', 22, 2.2)} Ir a recoger</button>
+    </main></div>`;
+};
+
+PANTALLAS.activo = () => {
+  const a = C().activo;
+  if (!a) {
+    return `<div class="pantalla">${headerTab('Pedido activo')}<main class="contenido">
+      ${vacio('amarillo', 'moto', 'No tienes un pedido activo', 'Cuando tomes un pedido, aquí verás a dónde ir y qué cobrar.', `<button class="btn" data-accion="ir" data-a="pedidos">Ver pedidos</button>`)}
+    </main>${nav('activo')}</div>`;
+  }
+  const p = a.pedido;
+  const header = `<header class="header" style="gap:14px;padding-bottom:20px"><div class="header-fila">${marca()}${campana()}</div>
+    <div style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;align-items:baseline;justify-content:space-between"><h1 class="h-titulo">Pedido activo</h1><span style="font-size:15px;font-weight:700">Paso ${a.paso} de 2</span></div>
+    <div class="pasos"><span class="lleno"></span><span class="${a.paso === 2 ? 'lleno' : ''}"></span></div></div></header>`;
+  const novedad = a.novedad ? `<div class="aviso amarillo">${ic('alert')}<div><b>Novedad reportada</b><p>${esc(a.novedad)} · la central te contactará.</p></div></div>` : '';
+  const botonesContacto = dir => `<div class="duo"><a class="mini azul" href="${maps(dir)}" target="_blank" rel="noopener">${ic('nav', 20)} Abrir en Maps</a><button class="mini naranja" data-accion="llamar">${ic('phone', 20)} Llamar</button></div>`;
+  let cuerpo;
+  if (a.paso === 1) {
+    cuerpo = `${novedad}
+      <article class="card"><div class="card-pad">
+        <div class="fila-ico"><span class="ico-circ azul">${ic('store', 24)}</span><div class="parada-txt"><span class="lbl azul">Ir a recoger</span><span class="grande-nombre">${esc(p.negocio)}</span><span class="dir" style="font-size:16px">${esc(p.dirNegocio)}</span></div></div>
+        ${botonesContacto(p.dirNegocio)}
+      </div></article>
+      <article class="card"><div class="card-pad" style="gap:10px;padding:16px 18px">
+        <span class="lbl naranja">Después entregas en</span>
+        <div class="parada-txt"><span class="nombre">${esc(p.cliente)}</span><span class="dir">${esc(p.dirCliente)}</span></div>
+        <div class="chips">${chipCobro(p)}<span class="chip amarillo">Domicilio ${fmt(p.domicilio)}</span></div>
+      </div></article>
+      <div class="grow"></div>
+      <div class="duo"><button class="btn-texto" data-accion="ir" data-a="novedad">Reportar novedad</button><button class="btn-texto rojo" data-accion="ir" data-a="cancelar">Cancelar pedido</button></div>
+      <button class="btn grande" data-accion="recogido">${ic('check', 22, 2.6)} Ya recogí el pedido</button>`;
+  } else {
+    cuerpo = `${novedad}
+      <article class="card"><div class="card-pad">
+        <div class="fila-ico"><span class="ico-circ naranja">${ic('home', 24)}</span><div class="parada-txt"><span class="lbl naranja">Entregar a</span><span class="grande-nombre">${esc(p.cliente)}</span><span class="dir" style="font-size:16px">${esc(p.dirCliente)}</span></div></div>
+        ${p.nota ? `<div class="nota-cliente">${ic('note', 18)} ${esc(p.nota)}</div>` : ''}
+        ${botonesContacto(p.dirCliente)}
+      </div></article>
+      ${p.cobrar > 0
+        ? `<div class="morado-box"><span class="circ">${ic('cash', 24)}</span><div><small>Cobrar al cliente</small><b>${fmt(p.cobrar)}</b><span class="s">Efectivo o transferencia</span></div></div>`
+        : `<div class="aviso amarillo">${ic('check')}<div><b>Pedido ya pagado</b><p>No le cobres nada al cliente.</p></div></div>`}
+      <div class="tiempos-mini"><span>${ic('clock', 16)} Tomado ${hora(a.tomado)}</span><span>Recogido ${hora(a.recogido)}</span></div>
+      <div class="grow"></div>
+      <button class="btn-texto" data-accion="ir" data-a="novedad">Reportar novedad</button>
+      <button class="btn grande" data-accion="entregado">${ic('check', 22, 2.6)} Entregado</button>`;
+  }
+  return `<div class="pantalla">${header}<main class="contenido">${cuerpo}</main>${nav('activo')}</div>`;
+};
+
+PANTALLAS.novedad = () => {
+  if (!C().activo) return PANTALLAS.activo();
+  const sel = S.sel.novedad || NOVEDADES[0];
+  return `<div class="pantalla">${subHeader('Reportar novedad', 'activo')}<main class="contenido" style="padding-top:18px">
+    <span class="pregunta">¿Qué pasó con el pedido?</span>
+    <div class="opciones">${NOVEDADES.map(n => opcion('novedad', n, n, n === sel)).join('')}</div>
+    <div class="campo"><label for="nota-nov">Cuéntale a la central (opcional)</label><textarea class="input" id="nota-nov" placeholder="Ej: llamé 3 veces y no contesta"></textarea></div>
+    <div class="nota-p">${ic('info', 18)}<span>La central te dirá si esperas, devuelves el pedido o lo entregas en otra dirección.</span></div>
+    <div class="grow"></div>
+    <button class="btn" data-accion="enviar-novedad">Enviar a la central</button>
+  </main></div>`;
+};
+
+PANTALLAS.cancelar = () => {
+  const a = C().activo;
+  if (!a || a.paso !== 1) return PANTALLAS.activo();
+  const sel = S.sel.cancelar || MOTIVOS_CANCELAR[0];
+  return `<div class="pantalla">${subHeader('Cancelar pedido', 'activo')}<main class="contenido" style="padding-top:18px">
+    <div class="aviso rojo">${ic('alert', 24)}<div><b>Solo puedes cancelar antes de recoger</b><p>La central verá el motivo y quedará en tu historial.</p></div></div>
+    <span class="pregunta">¿Por qué cancelas?</span>
+    <div class="opciones">${MOTIVOS_CANCELAR.map(n => opcion('cancelar', n, n, n === sel)).join('')}</div>
+    <div class="campo"><label for="nota-can">Detalle (opcional)</label><textarea class="input" id="nota-can" placeholder="Cuéntale a la central qué pasó"></textarea></div>
+    <div class="grow"></div>
+    <button class="btn rojo" data-accion="confirmar-cancelar">Cancelar pedido</button>
+    <button class="btn sec" data-accion="ir" data-a="activo">Volver al pedido</button>
+  </main></div>`;
+};
+
+PANTALLAS.cancelado = () => {
+  const c = S.cancelado || { negocio: '', barrio: '', motivo: '' };
+  return `<div class="pantalla">
+    <header class="hero rojo"><div class="circ-grande" style="background:var(--rojo)">${ic('x', 44, 3)}</div><h1 style="font-size:28px">La central canceló el pedido</h1><p style="font-size:17px;font-weight:700;color:var(--rojo-texto)">No sigas con este pedido.</p></header>
+    <main class="contenido" style="padding-top:20px">
+      <article class="card"><div class="card-pad">
+        <div class="parada-txt"><span class="lbl rojo">Motivo</span><span class="nombre">${esc(c.motivo)}</span></div>
+        <div class="sep"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:16px;font-weight:700;color:var(--texto-fuerte)">
+          <div style="display:flex;align-items:center;gap:10px"><span class="dot-azul"></span>${esc(c.negocio)}</div>
+          <div style="display:flex;align-items:center;gap:10px"><span class="dot-naranja"></span>${esc(c.barrio)}</div>
+        </div>
+      </div></article>
+      <div class="aviso amarillo">${ic('info')}<span>${c.recogido ? 'Ya lo habías recogido: devuélvelo al negocio y avisa a la central.' : 'Si ibas en camino al negocio, no sigas.'}</span></div>
+      <div class="pill-verde"><i></i>Ya estás libre para tomar otro pedido</div>
+      <div class="grow"></div>
+      <button class="btn" data-accion="ir" data-a="pedidos">Volver a pedidos</button>
+    </main></div>`;
+};
+
+PANTALLAS.historial = () => {
+  const f = S.filtro;
+  const lista = C().historial.filter(h => f === 'semana' || (f === 'hoy' ? esHoy(h.tiempos.publicado) : esAyer(h.tiempos.publicado)));
+  const ent = lista.filter(h => h.estado === 'entregado');
+  const suma = ent.reduce((s, h) => s + h.domicilio, 0);
+  const prom = ent.length ? Math.round(ent.reduce((s, h) => s + (h.tiempos.entregado - h.tiempos.tomado), 0) / ent.length / 60000) : 0;
+  const filtros = `<div class="filtros">${[['hoy', 'Hoy'], ['ayer', 'Ayer'], ['semana', 'Esta semana']].map(([k, l]) => `<button class="${f === k ? 'sel' : ''}" data-accion="filtro" data-v="${k}" aria-pressed="${f === k}">${l}</button>`).join('')}</div>`;
+  const etiqueta = f === 'hoy' ? 'Hoy · ' + fechaLarga(new Date()) : f === 'ayer' ? 'Ayer · ' + fechaLarga(new Date(ahora() - 864e5)) : 'Esta semana';
+  const filas = lista.length ? `<div class="lista">${lista.map(filaHistorial).join('')}</div>` : vacio('gris', 'history', 'Sin pedidos en este periodo', 'Aquí verás los pedidos que entregues.');
+  return `<div class="pantalla">${headerTab('Historial', filtros)}<main class="contenido">
+    <div class="tiles"><div class="tile"><span>Entregados</span><b>${ent.length}</b></div><div class="tile"><span>Domicilios</span><b style="color:var(--naranja)">${fmt(suma)}</b></div><div class="tile"><span>Prom. entrega</span><b>${prom ? prom + ' min' : '—'}</b></div></div>
+    <div class="etq-dia">${etiqueta}</div>${filas}
+  </main>${nav('historial')}</div>`;
+};
+function filaHistorial(h) {
+  const ent = h.estado === 'entregado';
+  const [hh, ap] = horaPartes(ent ? h.tiempos.entregado : h.tiempos.cancelado);
+  return `<button class="fila" data-accion="detalle" data-id="${h.id}">
+    <span class="hora"><b>${hh}</b><small>${ap}</small></span>
+    <span class="medio"><b>${esc(h.negocio)} → ${esc(h.barrio)}</b>${ent ? `<span class="badge gris">${ic('check', 12, 3)}Entregado</span>` : `<span class="badge rojo">${ic('x', 12, 3)}Cancelado</span>`}</span>
+    <span class="monto" ${ent ? '' : 'style="color:var(--gris)"'}>${fmt(ent ? h.domicilio : 0)}</span>
+    <span class="chev">${ic('chev', 18, 2.5)}</span></button>`;
+}
+
+PANTALLAS.detalle = () => {
+  const h = C().historial.find(x => String(x.id) === String(S.params.id));
+  if (!h) return PANTALLAS.historial();
+  const t = h.tiempos, ent = h.estado === 'entregado';
+  const pasos = [['Publicado', '#A8A29E', t.publicado], ['Tomado', 'var(--accion)', t.tomado]];
+  if (t.recogido) pasos.push(['Recogido', 'var(--azul)', t.recogido]);
+  pasos.push(ent ? ['Entregado', 'var(--naranja)', t.entregado] : ['Cancelado', 'var(--rojo)', t.cancelado]);
+  const filas = pasos.map(([n, col, ts], i) => `<div class="linea-t"><span class="dot" style="background:${col}"></span><span class="n">${n}</span><span>${hora(ts)}</span><small>${i ? '+' + Math.max(0, Math.round((ts - pasos[i - 1][2]) / 60000)) + ' min' : ''}</small></div>`).join('');
+  const pago = h.cobrado > 0 ? `${fmt(h.cobrado)} · ${h.pago === 'transferencia' ? 'Transferencia' : 'Efectivo'}` : (ent ? 'Ya estaba pagado' : '—');
+  return `<div class="pantalla">${subHeader('Detalle del pedido', 'historial')}<main class="contenido">
+    <article class="card"><div class="card-pad">
+      <div class="kv"><span style="font-size:15px;font-weight:700;color:var(--texto-suave)">Pedido #${h.id}</span>${ent ? `<span class="badge gris">${ic('check', 13, 3)}Entregado</span>` : `<span class="badge rojo">${ic('x', 13, 3)}Cancelado</span>`}</div>
+      ${paradas(h.negocio, h.dirNegocio || '', h.cliente || h.barrio, h.dirCliente || '')}
+    </div></article>
+    ${ent ? '' : `<div class="aviso rojo">${ic('alert')}<div><b>${h.por === 'central' ? 'Cancelado por la central' : 'Cancelado por ti'}</b><p>${esc(h.motivo)}</p></div></div>`}
+    <article class="card"><div class="card-pad">
+      <span class="titulo-card">Tiempos</span>${filas}
+      ${ent ? `<div class="sep"></div><div class="kv"><span style="font-weight:700;color:var(--texto-fuerte)">Tiempo de entrega</span><b style="font-size:22px;color:var(--naranja)">${Math.round((t.entregado - t.tomado) / 60000)} min</b></div>` : ''}
+    </div></article>
+    <article class="card"><div class="card-pad" style="gap:12px">
+      <span class="titulo-card">Dinero</span>
+      <div class="kv"><span>Domicilio</span><b>${fmt(ent ? h.domicilio : 0)}</b></div>
+      <div class="kv"><span>Cobrado al cliente</span><b style="color:var(--morado)">${pago}</b></div>
+    </div></article>
+  </main></div>`;
+};
+
+PANTALLAS.cuota = () => {
+  const e = C().cuota;
+  let estado;
+  if (e === 'al_dia') {
+    estado = `<article class="card"><div class="card-pad" style="gap:10px">
+      <div class="kv"><span style="font-size:15px;font-weight:700;color:var(--texto-suave)">Cuota de esta semana</span><span class="badge verde">${ic('check', 13, 3)}Al día</span></div>
+      <span class="monto-grande">${VALOR_CUOTA}</span>
+      <span class="lbl-fecha">${ic('cal', 18)} Próxima cuota: ${fechaLarga(lunes(1))}</span>
+    </div></article>`;
+  } else if (e === 'vencida') {
+    estado = `<article class="card"><div class="card-pad" style="gap:10px">
+      <div class="kv"><span style="font-size:15px;font-weight:700;color:var(--texto-suave)">Cuota de esta semana</span><span class="badge rojo">${ic('alert', 13, 2.5)}Vencida</span></div>
+      <span class="monto-grande">${VALOR_CUOTA}</span>
+      <span class="lbl-fecha rojo">${ic('cal', 18)} Venció el ${fechaLarga(lunes(0))}</span>
+      <button class="btn" style="height:56px;font-size:18px;margin-top:4px" data-accion="ir" data-a="pago">Ya pagué, subir comprobante</button>
+    </div></article>`;
+  } else {
+    estado = `<article class="card"><div class="card-pad" style="gap:10px">
+      <div class="kv"><span style="font-size:15px;font-weight:700;color:var(--texto-suave)">Cuota de esta semana</span><span class="badge amarillo">${ic('clock', 13, 2.5)}En revisión</span></div>
+      <span class="monto-grande">${VALOR_CUOTA}</span>
+      <span style="font-size:15px;color:var(--texto-suave)">Enviaste tu comprobante. El administrador lo está revisando.</span>
+      <div class="demo-mini"><button class="btn-texto" data-accion="aprobar">${ic('tool', 18)} Prueba: simular que el admin aprobó</button></div>
+    </div></article>`;
+  }
+  const como = `<article class="card"><div class="card-pad" style="gap:12px;padding:16px 18px">
+    <span class="titulo-card">Cómo pagar</span>
+    <div class="fila-ico" style="align-items:center"><span class="ico-circ morado" style="width:42px;height:42px">${ic('mobile', 20)}</span><div class="parada-txt"><span class="nombre" style="font-size:16px">Nequi</span><span class="dir" style="font-size:14px">Al número de la central: ${NEQUI_CENTRAL}</span></div></div>
+    <div class="fila-ico" style="align-items:center"><span class="ico-circ naranja" style="width:42px;height:42px">${ic('store', 20)}</span><div class="parada-txt"><span class="nombre" style="font-size:16px">Efectivo</span><span class="dir" style="font-size:14px">En la oficina de la central</span></div></div>
+  </div></article>`;
+  const semanas = (e === 'al_dia' ? [0, -1] : [-1, -2]).map(o => `<div class="kv"><span>${rangoSemana(o)}</span><span style="display:flex;align-items:center;gap:10px"><span class="badge gris">${ic('check', 12, 3)}Pagada</span><b>${VALOR_CUOTA}</b></span></div>`).join('');
+  const anteriores = `<article class="card"><div class="card-pad" style="gap:10px;padding:16px 18px"><span class="titulo-card">Pagos anteriores</span>${semanas}</div></article>`;
+  return `<div class="pantalla">${headerTab('Mi cuota')}<main class="contenido">${estado}${como}${anteriores}</main>${nav('cuota')}</div>`;
+};
+
+function contenidoSubir() {
+  return S.foto
+    ? `<img src="${S.foto}" alt="Comprobante cargado"><span style="font-size:14px;font-weight:700">Toca para cambiar la foto</span>`
+    : `${ic('image', 36)}<span style="font-size:16px;font-weight:700">Toca para subir la foto</span><span style="font-size:13px;color:var(--texto-suave)">Captura de Nequi o foto del recibo</span>`;
+}
+PANTALLAS.pago = () => {
+  const m = S.sel.metodo || 'Nequi';
+  return `<div class="pantalla">${subHeader('Avisar pago', 'cuota')}<main class="contenido" style="padding-top:18px">
+    <span class="pregunta">¿Cómo pagaste?</span>
+    <div class="opciones">${['Nequi', 'Transferencia bancaria', 'Efectivo en la central'].map(k => opcion('metodo', k, k, m === k)).join('')}</div>
+    <div class="campo"><span class="lbl-campo">Foto del comprobante</span>
+      <label class="subir"><span id="subir-contenido" style="display:contents">${contenidoSubir()}</span><input type="file" accept="image/*" id="foto"></label>
+      <p class="error" id="err-foto" hidden>Sube la foto del comprobante.</p></div>
+    <div class="campo"><label for="valor">Valor pagado</label><input class="input" id="valor" inputmode="numeric" placeholder="${VALOR_CUOTA}"></div>
+    <div class="nota-p">${ic('info', 18)}<span>El administrador revisará tu pago. Cuando lo apruebe, podrás tomar pedidos de nuevo.</span></div>
+    <div class="grow"></div>
+    <button class="btn" data-accion="enviar-pago">Enviar comprobante</button>
+  </main></div>`;
+};
+
+PANTALLAS.perfil = () => {
+  const u = U(), c = C();
+  const badge = c.cuota === 'al_dia' ? `<span class="badge verde">${ic('check', 13, 3)}Cuota al día</span>`
+    : c.cuota === 'vencida' ? `<span class="badge rojo">${ic('alert', 13, 2.5)}Cuota vencida</span>`
+    : `<span class="badge amarillo">${ic('clock', 13, 2.5)}Pago en revisión</span>`;
+  const fila = (i, t, v) => `<button class="menu-fila" data-accion="menu" data-v="${v}"><span class="ico">${ic(i)}</span><span class="txt">${t}</span><span class="chev">${ic('chev', 18, 2.5)}</span></button>`;
+  return `<div class="pantalla">${subHeader('Mi perfil', 'pedidos')}<main class="contenido" style="gap:14px">
+    <div class="perfil-top"><div class="avatar">${u.iniciales}</div><span class="grande-nombre" style="margin-top:4px">${esc(u.nombre)}</span><span class="dir" style="font-size:16px">${telFmt(S.tel)}</span>${badge}</div>
+    <article class="card"><div class="card-pad" style="flex-direction:row;align-items:center;padding:16px 18px"><span class="ico-circ amarillo">${ic('moto', 26)}</span><div class="parada-txt"><span class="lbl naranja">Mi moto</span><span class="nombre">Placa ${u.placa}</span><span class="dir">${u.moto}</span></div></div></article>
+    <div class="lista">${fila('user', 'Datos personales', 'datos')}${fila('msg', 'Contactar a la central', 'central')}${fila('shield', 'Tratamiento de datos', 'privacidad')}</div>
+    <section class="demo"><h3>${ic('tool', 18)} Herramientas de prueba</h3><p>Simula lo que haría la central para ver las demás pantallas.</p>
+      <button data-accion="demo-nuevo">${ic('plus', 18)} Llega un pedido nuevo</button>
+      <button data-accion="demo-cancelar">${ic('x', 18)} La central cancela mi pedido activo</button>
+      <button data-accion="demo-vaciar">${ic('list', 18)} Vaciar la lista de pedidos</button>
+      <button data-accion="demo-reiniciar">${ic('refresh', 18)} Reiniciar la prueba</button>
+    </section>
+    <button class="btn salir" data-accion="salir">${ic('logout', 20, 2.2)} Cerrar sesión</button>
+    <p class="centro" style="margin:0;font-size:13px;color:var(--gris)">TuDomiYa · prototipo</p>
+  </main></div>`;
+};
+
+/* ---------- Hoja de confirmar entrega ---------- */
+const SHEETS = {};
+SHEETS.confirmar = () => {
+  const p = C().activo.pedido;
+  const m = S.sel.pago || 'efectivo';
+  const ops = p.cobrar > 0 ? [['efectivo', 'cash', 'morado', 'Efectivo', `Recibí ${fmt(p.cobrar)}`], ['transferencia', 'mobile', 'azul', 'Transferencia', 'Nequi o cuenta bancaria']] : [];
+  return `<div class="sheet-fondo" data-accion="cerrar-sheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="t-sheet" data-accion="nada">
+    <span class="agarre"></span>
+    <div><h2 id="t-sheet">${p.cobrar > 0 ? '¿Cómo pagó el cliente?' : 'Confirmar entrega'}</h2><p class="sub">${p.cobrar > 0 ? 'Confirma el cobro para cerrar el pedido.' : 'Este pedido ya estaba pagado.'}</p></div>
+    ${p.cobrar > 0 ? `<div class="morado-fila"><span>Valor a cobrar</span><b>${fmt(p.cobrar)}</b></div>` : ''}
+    ${ops.map(([k, i, col, t, s]) => `<button class="opcion grande-op ${m === k ? 'sel' : ''}" data-accion="sel" data-g="pago" data-v="${k}" aria-pressed="${m === k}"><span class="ico-circ ${col}" style="width:44px;height:44px">${ic(i)}</span><span class="op-txt"><b>${t}</b><small>${s}</small></span><span class="radio"></span></button>`).join('')}
+    <button class="btn" data-accion="confirmar-entrega">Confirmar entrega</button>
+    <button class="btn-texto" data-accion="cerrar-sheet">Volver</button>
+  </div></div>`;
+};
+
+/* ---------- Render ---------- */
+const app = document.getElementById('app');
+function render() {
+  if (!S.tel || !U()) { S.tel = null; S.pantalla = 'login'; }
+  const pantalla = PANTALLAS[S.pantalla] ? S.pantalla : 'pedidos';
+  app.innerHTML = PANTALLAS[pantalla]() + (S.sheet && SHEETS[S.sheet] && C().activo ? SHEETS[S.sheet]() : '');
+  document.body.style.overflow = S.sheet ? 'hidden' : '';
+  guardar();
+}
+
+/* ---------- Acciones ---------- */
+function registrarCancelacion(a, motivo, por) {
+  const p = a.pedido;
+  C().historial.unshift({ id: p.id, negocio: p.negocio, barrio: p.barrio.replace(/^Barrio /, ''), dirNegocio: p.dirNegocio, cliente: p.cliente, dirCliente: p.dirCliente, domicilio: p.domicilio, cobrado: 0, pago: '', estado: 'cancelado', motivo, por,
+    tiempos: { publicado: p.publicado, tomado: a.tomado, recogido: a.recogido || undefined, cancelado: ahora() } });
+}
+
+app.addEventListener('click', e => {
+  const el = e.target.closest('[data-accion]');
+  if (!el) return;
+  const acc = el.dataset.accion;
+  switch (acc) {
+    case 'nada': break;
+    case 'ir': ir(el.dataset.a); break;
+    case 'llenar': {
+      document.getElementById('tel').value = telFmt(el.dataset.tel);
+      document.getElementById('clave').value = USUARIOS[el.dataset.tel].clave;
+      document.getElementById('err-login').hidden = true;
+      break;
+    }
+    case 'permisos': C().permisos = true; ir('pedidos'); toast('Permisos activados (simulado)'); break;
+    case 'campana': {
+      const n = C().pedidos.length;
+      toast(!libreParaPedidos() ? 'Paga la cuota para recibir avisos de pedidos' : n ? `Hay ${n} pedido${n > 1 ? 's' : ''} disponible${n > 1 ? 's' : ''}` : 'No tienes notificaciones nuevas');
+      break;
+    }
+    case 'switch': {
+      if (!libreParaPedidos()) { toast('Paga la cuota para poder conectarte'); break; }
+      C().disponible = !C().disponible;
+      toast(C().disponible ? 'Estás conectado' : 'Te desconectaste');
+      render(); break;
+    }
+    case 'tomar': {
+      const c = C();
+      if (!libreParaPedidos()) { toast('Paga la cuota para tomar pedidos'); break; }
+      if (c.activo) { toast('Termina tu pedido activo para tomar otro'); break; }
+      const p = c.pedidos.find(x => String(x.id) === el.dataset.id);
+      if (!p) break;
+      c.pedidos = c.pedidos.filter(x => x !== p);
+      if (p.loTomaOtro) { S.aviso = p.negocio; render(); window.scrollTo(0, 0); break; }
+      c.activo = { pedido: p, paso: 1, tomado: ahora(), recogido: null, novedad: '' };
+      ir('tomado'); break;
+    }
+    case 'llamar': toast('Llamada simulada: en la app real se marca el número'); break;
+    case 'recogido': {
+      const a = C().activo; if (!a) break;
+      a.paso = 2; a.recogido = ahora(); a.novedad = '';
+      render(); window.scrollTo(0, 0); toast('Listo, ahora llévalo al cliente'); break;
+    }
+    case 'entregado': S.sheet = 'confirmar'; S.sel = { pago: 'efectivo' }; render(); break;
+    case 'cerrar-sheet': S.sheet = null; render(); break;
+    case 'sel': {
+      const g = el.dataset.g, v = el.dataset.v;
+      S.sel[g] = v;
+      document.querySelectorAll(`[data-g="${g}"]`).forEach(b => { const on = b.dataset.v === v; b.classList.toggle('sel', on); b.setAttribute('aria-pressed', on); });
+      break;
+    }
+    case 'confirmar-entrega': {
+      const c = C(), a = c.activo; if (!a) break;
+      const p = a.pedido;
+      const pago = p.cobrar > 0 ? (S.sel.pago || 'efectivo') : 'pagado';
+      c.historial.unshift({ id: p.id, negocio: p.negocio, barrio: p.barrio.replace(/^Barrio /, ''), dirNegocio: p.dirNegocio, cliente: p.cliente, dirCliente: p.dirCliente, domicilio: p.domicilio, cobrado: p.cobrar, pago, estado: 'entregado',
+        tiempos: { publicado: p.publicado, tomado: a.tomado, recogido: a.recogido, entregado: ahora() } });
+      c.activo = null;
+      ir('pedidos'); toast(`Entrega confirmada · +${fmt(p.domicilio)}`); break;
+    }
+    case 'enviar-novedad': {
+      const a = C().activo; if (!a) break;
+      const nota = (document.getElementById('nota-nov').value || '').trim();
+      a.novedad = (S.sel.novedad || NOVEDADES[0]) + (nota ? ' — ' + nota : '');
+      ir('activo'); toast('Novedad enviada a la central'); break;
+    }
+    case 'confirmar-cancelar': {
+      const c = C(), a = c.activo; if (!a) break;
+      const nota = (document.getElementById('nota-can').value || '').trim();
+      registrarCancelacion(a, (S.sel.cancelar || MOTIVOS_CANCELAR[0]) + (nota ? ' — ' + nota : ''), 'domiciliario');
+      c.activo = null;
+      ir('pedidos'); toast('Pedido cancelado. La central verá el motivo.'); break;
+    }
+    case 'filtro': S.filtro = el.dataset.v; render(); break;
+    case 'detalle': ir('detalle', { id: el.dataset.id }); break;
+    case 'enviar-pago': {
+      if (!S.foto) { document.getElementById('err-foto').hidden = false; break; }
+      C().cuota = 'revision'; S.foto = null;
+      ir('cuota'); toast('Comprobante enviado. Te avisaremos cuando lo aprueben.'); break;
+    }
+    case 'aprobar': C().cuota = 'al_dia'; C().disponible = true; render(); toast('Pago aprobado. Ya puedes tomar pedidos.'); break;
+    case 'menu': {
+      const v = el.dataset.v;
+      toast(v === 'central' ? 'En la app real abre WhatsApp o llama a la central' : v === 'privacidad' ? 'Aquí irá la política de tratamiento de datos (Ley 1581)' : 'Disponible en la versión final');
+      break;
+    }
+    case 'demo-nuevo': {
+      const base = PEDIDOS_EXTRA[S.extra % PEDIDOS_EXTRA.length];
+      S.extra++;
+      C().pedidos.push(Object.assign({}, base, { id: S.nextId++, publicado: ahora() }));
+      guardar();
+      try { if (navigator.vibrate) navigator.vibrate([120, 60, 120]); } catch (err) {}
+      toast('Llegó un pedido nuevo. Míralo en Pedidos.'); break;
+    }
+    case 'demo-cancelar': {
+      const c = C(), a = c.activo;
+      if (!a) { toast('No tienes un pedido activo. Toma uno primero.'); break; }
+      const motivo = 'El cliente canceló el pedido';
+      registrarCancelacion(a, motivo, 'central');
+      S.cancelado = { negocio: a.pedido.negocio, barrio: a.pedido.barrio, motivo, recogido: a.paso === 2 };
+      c.activo = null;
+      ir('cancelado');
+      try { if (navigator.vibrate) navigator.vibrate([200, 80, 200]); } catch (err) {}
+      break;
+    }
+    case 'demo-vaciar': C().pedidos = []; guardar(); toast('Lista vacía. Ve a Pedidos para verla.'); break;
+    case 'demo-reiniciar': {
+      const tel = S.tel;
+      S = estadoInicial(); S.tel = tel; C().permisos = true;
+      ir('pedidos'); toast('Prueba reiniciada'); break;
+    }
+    case 'salir': S.tel = null; S.sheet = null; ir('login'); break;
+  }
+});
+
+app.addEventListener('submit', e => {
+  if (e.target.id !== 'form-login') return;
+  e.preventDefault();
+  const tel = soloDigitos(document.getElementById('tel').value);
+  const clave = document.getElementById('clave').value.trim();
+  const u = USUARIOS[tel];
+  if (!u || u.clave !== clave) { document.getElementById('err-login').hidden = false; return; }
+  S.tel = tel;
+  ir(C().permisos ? 'pedidos' : 'permisos');
+});
+
+app.addEventListener('change', e => {
+  if (e.target.id !== 'foto' || !e.target.files || !e.target.files[0]) return;
+  const lector = new FileReader();
+  lector.onload = () => {
+    S.foto = lector.result;
+    const cont = document.getElementById('subir-contenido');
+    if (cont) cont.innerHTML = contenidoSubir();
+    const err = document.getElementById('err-foto'); if (err) err.hidden = true;
+  };
+  lector.readAsDataURL(e.target.files[0]);
+});
+
+/* Actualiza el "Hace X min" cada 30 segundos */
+setInterval(() => {
+  if (S.tel && S.pantalla === 'pedidos' && !S.sheet && document.visibilityState === 'visible' && !document.activeElement.matches('input,textarea')) render();
+}, 30000);
+
+history.replaceState({ p: S.pantalla, params: S.params }, '');
+render();
+</script>
+</body>
+</html>
